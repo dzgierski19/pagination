@@ -2,61 +2,99 @@
 // entriesOnPage to maksymalna zwracana ilość elementów z dataEntries dla wybranej strony
 
 // przykładowe dane
-const data = [1, 2, 3, 4, 5, 6];
+const data = [2, 1];
 
-interface settings {
+type settingsType = {
   actualPageIndex: number;
   entries: number;
-}
+};
 
-const objSettings = (actualPageIndex: number, entries: number): settings => {
+const objSettings = ({
+  actualPageIndex,
+  entries,
+}: settingsType): settingsType => {
   return { actualPageIndex, entries };
 };
 
-const manualSettings: { actualPageIndex: number; entries: number } = {
-  actualPageIndex: 0,
-  entries: 3,
+const manualSettings: settingsType = {
+  actualPageIndex: 1,
+  entries: 2,
 };
 
-console.log(manualSettings.entries);
+const paginateArray = (data: number[], objSettings: settingsType): number[] => {
+  isInputInteger(objSettings.entries);
+  isInputInteger(objSettings.actualPageIndex);
+  isInputHigherThanZero(objSettings.entries);
+  isInputHigherThanZero(objSettings.actualPageIndex);
+  isInputHigherThanArrayLengthInlcuding0index(
+    data,
+    objSettings.actualPageIndex
+  );
+  isInputHigherThanArrayLengthInlcuding0index(
+    data,
+    objSettings.actualPageIndex
+  );
+  isInputHigherThanArrayLength(data, objSettings.entries);
+  isIndexAvailableInArrayWithNumberOfProvidedElements(
+    data,
+    objSettings.entries,
+    objSettings.actualPageIndex
+  );
+  return data.slice(
+    objSettings.actualPageIndex * objSettings.entries,
+    objSettings.actualPageIndex * objSettings.entries + objSettings.entries
+  );
+};
 
-const paginateArray = (
-  data: number[],
-  objSettings: { actualPageIndex: number; entries: number }
-): number[] => {
-  const emptyArray: number[][] = [];
-  for (let i = 0; i < data.length / objSettings.entries; i++) {
-    emptyArray.push(
-      data.slice(
-        i * objSettings.entries,
-        i * objSettings.entries + objSettings.entries
-      )
+const isInputInteger = (input: number) => {
+  if (!Number.isInteger(input)) {
+    throw new Error("Please provide Integer");
+  }
+};
+
+const isInputHigherThanZero = (input: number) => {
+  if (input < 0) {
+    throw new Error("Please provide Number higher than Zero");
+  }
+};
+
+const isInputHigherThanArrayLengthInlcuding0index = (
+  array: number[],
+  input: number
+) => {
+  if (input > array.length - 1) {
+    throw new Error(
+      "Please provide input at least 1 point lower than number of elements in an array (because we started indexing from 0)"
     );
   }
-  const entriesOnSelectedPage = emptyArray[objSettings.actualPageIndex];
-  return entriesOnSelectedPage;
 };
+
+const isInputHigherThanArrayLength = (array: number[], input: number) => {
+  if (input > array.length) {
+    throw new Error(
+      "Please provide input lower or equal number of elements in an array"
+    );
+  }
+};
+
+const isIndexAvailableInArrayWithNumberOfProvidedElements = (
+  array: number[],
+  input1: number,
+  input2: number
+) => {
+  if (array.length / input1 < input2 + 1) {
+    throw new Error(
+      "This combination is not available. Please provide index acceptable for number of provided entries"
+    );
+  }
+};
+
+// const isNotEmptyArray = (input: number[]) => {
+//   if (input.length <= 0) {
+//     throw new Error("Please provide not empty array");
+//   }
+// };
 
 console.log(paginateArray(data, manualSettings));
 
-// const paginateArray = (data: number[], settings: object) => {
-//   const emptyArray: number[][] = [];
-//   for (let i = 0; i < data.length / 2; i++) {
-//     emptyArray.push(
-//       data.slice(
-//         i * entriesOnPage.settings,
-//         i * settings.entriesOnPage + settings.entriesOnPage
-//       )
-//     );
-//   }
-//   return emptyArray;
-// };
-
-// console.log(paginateArray(data, settings));
-// const paginateArray = (dataEntries, settings: object) => {
-//   // ...
-//   // return entriesOnSelectedPage
-// };
-
-// const result = paginateArray(data, settings);
-// // result === [3,4]
+//dodać walidację
