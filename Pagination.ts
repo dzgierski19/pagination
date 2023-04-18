@@ -2,7 +2,7 @@
 // entriesOnPage to maksymalna zwracana ilość elementów z dataEntries dla wybranej strony
 
 // przykładowe dane
-const data = [2, 1];
+const data = [2, 1, 2, 2, 3, 4, 5, 6, 7, 8, 2];
 
 type settingsType = {
   actualPageIndex: number;
@@ -17,33 +17,26 @@ const objSettings = ({
 };
 
 const manualSettings: settingsType = {
-  actualPageIndex: 1,
+  actualPageIndex: 5,
   entries: 2,
 };
 
 const paginateArray = (data: number[], objSettings: settingsType): number[] => {
-  isInputInteger(objSettings.entries);
-  isInputInteger(objSettings.actualPageIndex);
-  isInputHigherThanZero(objSettings.entries);
-  isInputHigherThanZero(objSettings.actualPageIndex);
-  isInputHigherThanArrayLengthInlcuding0index(
-    data,
-    objSettings.actualPageIndex
-  );
-  isInputHigherThanArrayLengthInlcuding0index(
-    data,
-    objSettings.actualPageIndex
-  );
-  isInputHigherThanArrayLength(data, objSettings.entries);
-  isIndexAvailableInArrayWithNumberOfProvidedElements(
-    data,
-    objSettings.entries,
-    objSettings.actualPageIndex
-  );
+  validateElements(data, objSettings.actualPageIndex, objSettings.entries);
   return data.slice(
     objSettings.actualPageIndex * objSettings.entries,
     objSettings.actualPageIndex * objSettings.entries + objSettings.entries
   );
+};
+
+const validateElements = (array: number[], index: number, entries: number) => {
+  isNotEmptyArray(array);
+  isInputInteger(entries);
+  isInputInteger(index);
+  isInputHigherThanZero(entries);
+  isInputHigherThanZero(index);
+  isInputHigherThanArrayLength(array, entries);
+  isIndexAvailable(array, entries, index);
 };
 
 const isInputInteger = (input: number) => {
@@ -58,17 +51,6 @@ const isInputHigherThanZero = (input: number) => {
   }
 };
 
-const isInputHigherThanArrayLengthInlcuding0index = (
-  array: number[],
-  input: number
-) => {
-  if (input > array.length - 1) {
-    throw new Error(
-      "Please provide input at least 1 point lower than number of elements in an array (because we started indexing from 0)"
-    );
-  }
-};
-
 const isInputHigherThanArrayLength = (array: number[], input: number) => {
   if (input > array.length) {
     throw new Error(
@@ -77,24 +59,22 @@ const isInputHigherThanArrayLength = (array: number[], input: number) => {
   }
 };
 
-const isIndexAvailableInArrayWithNumberOfProvidedElements = (
-  array: number[],
-  input1: number,
-  input2: number
-) => {
-  if (array.length / input1 < input2 + 1) {
+const isIndexAvailable = (array: number[], entries: number, index: number) => {
+  if (array.length / entries < index) {
     throw new Error(
       "This combination is not available. Please provide index acceptable for number of provided entries"
+    );
+  } else if (entries === 0) {
+    throw new Error(
+      "You must not divide by 0. Please provide entries higher than 0"
     );
   }
 };
 
-// const isNotEmptyArray = (input: number[]) => {
-//   if (input.length <= 0) {
-//     throw new Error("Please provide not empty array");
-//   }
-// };
+const isNotEmptyArray = (input: number[]) => {
+  if (input.length <= 0) {
+    throw new Error("Please provide not empty array");
+  }
+};
 
 console.log(paginateArray(data, manualSettings));
-
-//dodać walidację
