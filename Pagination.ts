@@ -9,13 +9,6 @@ type settingsType = {
   entries: number;
 };
 
-const objSettings = ({
-  actualPageIndex,
-  entries,
-}: settingsType): settingsType => {
-  return { actualPageIndex, entries };
-};
-
 const manualSettings: settingsType = {
   actualPageIndex: 5,
   entries: 2,
@@ -35,7 +28,6 @@ const validateElements = (array: number[], index: number, entries: number) => {
   isInputInteger(index);
   isInputHigherThanZero(entries);
   isInputHigherThanZero(index);
-  isInputHigherThanArrayLength(array, entries);
   isIndexAvailable(array, entries, index);
 };
 
@@ -48,14 +40,6 @@ const isInputInteger = (input: number) => {
 const isInputHigherThanZero = (input: number) => {
   if (input < 0) {
     throw new Error("Please provide Number higher than Zero");
-  }
-};
-
-const isInputHigherThanArrayLength = (array: number[], input: number) => {
-  if (input > array.length) {
-    throw new Error(
-      "Please provide input lower or equal number of elements in an array"
-    );
   }
 };
 
