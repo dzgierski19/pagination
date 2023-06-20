@@ -13,12 +13,12 @@ describe("pagination testing", () => {
 
   let data = [2, 1, 2, 2, 3, 4, 5, 6, 7, 8, 2];
   describe("it returns correct value when", () => {
-    it("should return paginated chunk when settings are positive integers", () => {
+    it("should return one before last chunk paginated chunk when settings are positive integers", () => {
       const result = paginateArray(data, manualSettings);
       expect(result).toEqual([7, 8]);
     });
 
-    it("should return paginated one before last chunk when settings are positive integers", () => {
+    it("should return last paginated chunk when settings are positive integers", () => {
       manualSettings.actualPageIndex = 5;
       const result = paginateArray(data, manualSettings);
       expect(result).toEqual([2]);
