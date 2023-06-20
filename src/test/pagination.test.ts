@@ -6,35 +6,33 @@ import {
 } from "../app/pagination";
 
 describe("pagination testing", () => {
-  //   test("should return element included in first parameter", () => {
-  //     const result = paginateArray(data, manualSettings);
-  //     const element = result.toString();
-  //     const el = data.toString();
-  //     console.log(el);
-  //     expect(el).toContain(element);
-  //   });
-
   let manualSettings: settingsType = {
-    actualPageIndex: 5,
+    actualPageIndex: 4,
     entries: 2,
   };
 
   let data = [2, 1, 2, 2, 3, 4, 5, 6, 7, 8, 2];
-  describe("testing if first parameter is empty array", () => {
-    test("should throw error if data is empty array", () => {
+  describe("it returns correct value when", () => {
+    it("should return paginated chunk when settings are positive integers", () => {
+      const result = paginateArray(data, manualSettings);
+      expect(result).toEqual([7, 8]);
+    });
+
+    it("should return paginated one before last chunk when settings are positive integers", () => {
+      manualSettings.actualPageIndex = 5;
+      const result = paginateArray(data, manualSettings);
+      expect(result).toEqual([2]);
+    });
+  });
+
+  describe("it returns error when", () => {
+    it("should throw error if data is empty array", () => {
       const data = [];
       function expectError() {
         paginateArray(data, manualSettings);
       }
-      expect(expectError).toThrow();
+      expect(expectError).toThrow("");
     });
-    test("should return if data is not empty array", () => {
-      const result = paginateArray(data, manualSettings);
-      //   expect(result).toEqual([2]);
-      expect(result).toBeTruthy();
-    });
-  });
-  describe("testing if actualPageIndex is Integer", () => {
     test("should throw error if actualPageIndex of objSettings is not Integer", () => {
       const manualSettings = {
         actualPageIndex: 2.5,
@@ -45,68 +43,60 @@ describe("pagination testing", () => {
       }
       expect(expectError).toThrow();
     });
-    test("should return if actualPageIndex of objSettings is Integer", () => {
-      const result = paginateArray(data, manualSettings);
-      //   expect(result).toEqual([2]);
-      expect(result).toBeTruthy();
-    });
-  });
-  describe("testing if actualPageIndex is Integer", () => {
-    test("should throw error if entries of objSettings is not Integer", () => {
-      const manualSettings = {
+    test("when settings are not integers", () => {
+      const manualSettings1 = {
         actualPageIndex: 2,
         entries: 2.5,
       };
-      function expectError() {
-        paginateArray(data, manualSettings);
+      function expectErrorFromEntries() {
+        paginateArray(data, manualSettings1);
       }
-      expect(expectError).toThrow();
+      expect(expectErrorFromEntries).toThrow();
+      const manualSettings2 = {
+        actualPageIndex: 2.5,
+        entries: 2,
+      };
+      function expectErrorFromPageIndex() {
+        paginateArray(data, manualSettings2);
+      }
+      expect(expectErrorFromPageIndex).toThrow();
     });
-    test("should return if entries of objSettings is Integer", () => {
-      const result = paginateArray(data, manualSettings);
-      //   expect(result).toEqual([2]);
-      expect(result).toBeTruthy();
-    });
-  });
-  describe("testing if actualPageIndex of objSettings is higher than 0", () => {
-    test("should throw error if actualPageIndex of objSettings is less than 0", () => {
-      const manualSettings = {
+    test("when settings are less than 0", () => {
+      const manualSettings1 = {
         actualPageIndex: -10,
         entries: 20,
       };
-      function expectError() {
-        paginateArray(data, manualSettings);
+      function expectErrorFromPageIndex() {
+        paginateArray(data, manualSettings1);
       }
-      expect(expectError).toThrow();
+      expect(expectErrorFromPageIndex).toThrow();
     });
-    test("should return if actualPageIndex of objSettings is higher than 0", () => {
-      const result = paginateArray(data, manualSettings);
-      //   expect(result).toEqual([2]);
-      expect(result).toBeTruthy();
-    });
-  });
-  describe("testing if entries of objSettings is higher than 0", () => {
-    test("should throw error if entries of objSettings is less than 0", () => {
-      const manualSettings = {
+    const manualSettings2 = {
+      actualPageIndex: 2,
+      entries: -1,
+    };
+    function expectErrorFromEntries() {
+      paginateArray(data, manualSettings2);
+    }
+    expect(expectErrorFromEntries).toThrow();
+    test("should throw error if entries of objSettings is less than 0 or equal 0", () => {
+      const manualSettings1 = {
         actualPageIndex: 5,
         entries: -1,
       };
-      function expectError() {
-        paginateArray(data, manualSettings);
+      function expectErrorFromEntriesLessThanZero() {
+        paginateArray(data, manualSettings1);
       }
-      expect(expectError).toThrow();
-    });
-    test("should return if entries of objSettings is higher than 0", () => {
-      const manualSettings: settingsType = {
+      expect(expectErrorFromEntriesLessThanZero).toThrow();
+      const manualSettings2 = {
         actualPageIndex: 5,
-        entries: 1,
+        entries: 0,
       };
-      const result = paginateArray(data, manualSettings);
-      //   expect(result).toEqual([2]);
-      expect(result).toBeTruthy();
+      function expectErrorFromEntriesEqualZero() {
+        paginateArray(data, manualSettings2);
+      }
+      expect(expectErrorFromEntriesEqualZero).toThrow();
     });
-  });
-  describe("testing if entries of objSettings is higher than 0", () => {
     test("should throw error if data.length divided by actualPageIndex of objSettings is less than actualPageIndex of objSettings", () => {
       const manualSettings = {
         actualPageIndex: 8,
@@ -116,12 +106,6 @@ describe("pagination testing", () => {
         paginateArray(data, manualSettings);
       }
       expect(expectError).toThrow();
-    });
-    test("should return if data.length divided by actualPageIndex of objSettings is more or equal actualPageIndex of objSettings", () => {
-      const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-      const result = paginateArray(data, manualSettings);
-      //   expect(result).toEqual([2]);
-      expect(result).toBeTruthy();
     });
   });
 });
