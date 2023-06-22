@@ -12,38 +12,28 @@ describe("pagination testing", () => {
   };
 
   let data = [2, 1, 2, 2, 3, 4, 5, 6, 7, 8, 2];
-  describe("it returns correct value when", () => {
-    it("should return one before last chunk paginated chunk when settings are positive integers", () => {
+  describe("it returns correct value", () => {
+    it("should return paginated chunk", () => {
       const result = paginateArray(data, manualSettings);
       expect(result).toEqual([7, 8]);
     });
 
-    it("should return last paginated chunk when settings are positive integers", () => {
+    it("should return last paginated chunk in which entries number is higher than elements", () => {
       manualSettings.actualPageIndex = 5;
       const result = paginateArray(data, manualSettings);
       expect(result).toEqual([2]);
     });
   });
 
-  describe("it returns error when", () => {
-    it("should throw error if data is empty array", () => {
+  describe("it throws error when", () => {
+    it("- data is empty array", () => {
       const data = [];
       function expectError() {
         paginateArray(data, manualSettings);
       }
       expect(expectError).toThrow("");
     });
-    test("should throw error if actualPageIndex of objSettings is not Integer", () => {
-      const manualSettings = {
-        actualPageIndex: 2.5,
-        entries: 2,
-      };
-      function expectError() {
-        paginateArray(data, manualSettings);
-      }
-      expect(expectError).toThrow();
-    });
-    test("when settings are not integers", () => {
+    it("- settings properties are not Integers", () => {
       const manualSettings1 = {
         actualPageIndex: 2,
         entries: 2.5,
@@ -61,7 +51,7 @@ describe("pagination testing", () => {
       }
       expect(expectErrorFromPageIndex).toThrow();
     });
-    test("when settings are less than 0", () => {
+    it("- settings properties are less than 0", () => {
       const manualSettings1 = {
         actualPageIndex: -10,
         entries: 20,
@@ -79,15 +69,7 @@ describe("pagination testing", () => {
       paginateArray(data, manualSettings2);
     }
     expect(expectErrorFromEntries).toThrow();
-    test("should throw error if entries of objSettings is less than 0 or equal 0", () => {
-      const manualSettings1 = {
-        actualPageIndex: 5,
-        entries: -1,
-      };
-      function expectErrorFromEntriesLessThanZero() {
-        paginateArray(data, manualSettings1);
-      }
-      expect(expectErrorFromEntriesLessThanZero).toThrow();
+    it("- entries of objSettings is equal 0", () => {
       const manualSettings2 = {
         actualPageIndex: 5,
         entries: 0,
@@ -97,7 +79,7 @@ describe("pagination testing", () => {
       }
       expect(expectErrorFromEntriesEqualZero).toThrow();
     });
-    test("should throw error if data.length divided by actualPageIndex of objSettings is less than actualPageIndex of objSettings", () => {
+    it("- given index is out of scope", () => {
       const manualSettings = {
         actualPageIndex: 8,
         entries: 4,
